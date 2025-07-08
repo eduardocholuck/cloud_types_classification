@@ -43,9 +43,11 @@ Figure 2 shows a randomly chosen sample from each class, selected from the train
 
 ![Figure2](images/selected_sample.png)
 
-Afther this process, the final dataset had a total of 656 images for train and 124 for validation.
+Afther this process, the final dataset had a total of 656 images for train and 165 for validation.
 
-## Technologies Used
+## Model 0: Base Model
+
+### Technologies Used
 
 - Python
 - PyTorch
@@ -55,35 +57,72 @@ Afther this process, the final dataset had a total of 656 images for train and 1
 - Matplotlib
 
 
-## Model Description - Base Model
+### Model Description
 
 The CNN2 model is a simple convolutional neural network tailored for image classification tasks with 6 output classes. Its architecture includes:
 
 * **Input**: RGB images (3 channels)
 
-* **Convolutional Layers**: Two convolutional layers, each followed by ```ReLU``` activation and 2×2 ```Max Pooling``` to extract features and reduce dimensionality;
+* **Convolutional Layers**: Two convolutional layers, each followed by ```ReLU``` activation and 2×2 ```Max Pooling``` to extract features and reduce dimensionality
 
-* **Dropout**: Optional dropout layers can be applied for regularization;
+* **Dropout**: Optional dropout layers can be applied for regularization
 
-* **Fully Connected Layers**: One hidden (50 units) and one output layer (6 units for class scores);
+* **Fully Connected Layers**: One hidden (50 units) and one output layer (6 units for class scores)
 
-* **Forward Pass**: Data flows sequentially through the featurizer (convolutions and pooling) and the classifier (fully connected layers);
+* **Forward Pass**: Data flows sequentially through the featurizer (convolutions and pooling) and the classifier (fully connected layers)
 
 * **Loss Function**: Cross-Entropy Loss (```nn.CrossEntropyLoss```), suitable for multi-class classification
 
-* **Optimizer**: Adam optimizer (```torch.optim.Adam```), applied to all model parameters;
+* **Optimizer**: Adam optimizer (```torch.optim.Adam```), applied to all model parameters
 
-* **Batch Size**: 16;
+* **Batch Size**: 16
 
-* **Epochs**: 10;
+* **Epochs**: 10
 
-* **Validation Strategy**: A validation split was used to monitor model performance during training.
+* **Validation Strategy**: A validation split was used to monitor model performance during training
 
-During training, loss values were monitored across epochs for traing and validation (Figure 3), as you can see below and a confusion matrix was computed to evaluate model performance.
+* **Number of parameters**: 6976
+
+During training, loss values were monitored across epochs for traing and validation (Figure 3), as you can see below. Furthermore, a confusion matrix was computed to evaluate model performance.
 
 
-![figure3](images/train_loss.png)
+![figure3](images/cnn2_losses.png)
 
 
-## Results
+### Results
 
+#### Regular training
+
+To assess the results, a confusion matrix was computed using the validation dataset (Figure 4). The Clear Sky class achieved the highest accuracy, which is unsurprising given that it consists of images with a uniform pattern, making it easier for the model to recognize. In contrast, the Altocumulus, Cirrus, and Cumulonimbus classes showed the lowest performance. Notably, for Cirrus and Cumulonimbus, around 50% of the samples were incorrectly classified as Cumulus, highlighting the model's difficulty in distinguishing between these similar cloud types.
+
+![Figure4](images/C_matrix.png)
+
+The CCN reached an accuracy of 57%. Even Though this low accuracy, the result is better than others examples of cloud classification that can be found in the Kaggle platform using the originals datasets.
+
+
+#### Trainig without Dropout
+
+The training after removing the Dropout layer had a slight increase in the accuracy, reaching 61% with the validation set. As espected, the loss in training and validation were less than the previously trainig. 
+
+![Figure5](images/regularizing_effect.png)
+
+Besides, as we can see in the confusion matrix (Figure 6) the second training showed betters results in the classes Altocumus and Cirrus, with the last one had a incrise of 8 to 17 right predictions.
+
+![Figure6](images/C_matrix_nodrop.png)
+
+#### Visualizing Filters
+
+The ```conv1``` filter visualization (Figure 7) shows 3-channel (RGB) 3×3 kernels that learn low-level features such as edges and color gradients. These weights exhibit clear directional patterns and contrasts typical of early-layer feature detectors.
+
+![Figure7](images/filters_conv1.png)
+
+In contrast, the ```conv2``` visualization (Figure 8) displays 5-channel 3×3 kernels, with each channel corresponding to a feature map output from ```conv1```. These filters capture more abstract, higher-order combinations of the first-layer features. The weights appear less interpretable in isolation, reflecting their role in integrating and recombining simpler patterns into more complex representations useful for classification.
+
+![Figure8](images/filters_conv2.png)
+
+This progression illustrates the hierarchical nature of CNNs: ```conv1``` learns localized, low-level features, while ```conv2``` composes them into richer, more discriminative abstractions.
+
+
+## Model 1: Base Model + n_feature modification
+
+### Modifications in the CNN 
