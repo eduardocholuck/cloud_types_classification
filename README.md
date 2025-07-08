@@ -28,12 +28,62 @@ Source: WMO (1956).
 
 Along with their altitude, clouds are also classified based on their shape, which can be seen in Figure 1.
 
-![alt text](image.png)
+![alt text](images/cloud_types.png)
 Source: [UCAR CENTER FOR SCIENCE EDUCATION](https://scied.ucar.edu/learning-zone/clouds/cloud-types)
 
 As can be seen in Figure 1, only two types of clouds can produce precipitation: cumulonimbus and nimbostratus. Cumulonimbus clouds are characterized by their tall, vertical shape and are associated with thunderstorms, while nimbostratus clouds are characterized by their flat, horizontal shape and are associated with persistent, widespread precipitation.
 
 ## Dataset
 
-## Model Description
+* **Original Source**: [Thitinan Kliangsuwan. Cloud Type Classification 3, 2022.](https://kaggle.com/competitions/cloud-type-classification-3) and [Howard-Cloud-X](https://www.kaggle.com/datasets/imbikramsaha/howard-cloudx).
+
+The two original datasets showed several inconsistencies regarding the previously labeled cloud types. Therefore, a manual selection of images was necessary to obtain the best dataset for training and validation. Additionally, due to the similarity between some cloud classes, five types were selected along with the “Clear Sky” class. The chosen classes were: Cirrus, Altocumulus, Cumulonimbus, Cumulus, Nimbostratus, and Clear Sky.
+
+Figure 2 shows a randomly chosen sample from each class, selected from the training data.
+
+![Figure2](images/selected_sample.png)
+
+Afther this process, the final dataset had a total of 656 images for train and 124 for validation.
+
+## Technologies Used
+
+- Python
+- PyTorch
+- Scikit-learn
+- Pandas
+- NumPy
+- Matplotlib
+
+
+## Model Description - Base Model
+
+The CNN2 model is a simple convolutional neural network tailored for image classification tasks with 6 output classes. Its architecture includes:
+
+* **Input**: RGB images (3 channels)
+
+* **Convolutional Layers**: Two convolutional layers, each followed by ```ReLU``` activation and 2×2 ```Max Pooling``` to extract features and reduce dimensionality;
+
+* **Dropout**: Optional dropout layers can be applied for regularization;
+
+* **Fully Connected Layers**: One hidden (50 units) and one output layer (6 units for class scores);
+
+* **Forward Pass**: Data flows sequentially through the featurizer (convolutions and pooling) and the classifier (fully connected layers);
+
+* **Loss Function**: Cross-Entropy Loss (```nn.CrossEntropyLoss```), suitable for multi-class classification
+
+* **Optimizer**: Adam optimizer (```torch.optim.Adam```), applied to all model parameters;
+
+* **Batch Size**: 16;
+
+* **Epochs**: 10;
+
+* **Validation Strategy**: A validation split was used to monitor model performance during training.
+
+During training, loss values were monitored across epochs for traing and validation (Figure 3), as you can see below and a confusion matrix was computed to evaluate model performance.
+
+
+![figure3](images/train_loss.png)
+
+
+## Results
 
