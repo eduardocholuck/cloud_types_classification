@@ -1,4 +1,4 @@
-# 🎓 Model Card – Multiiclass Classification of Cloud Types
+# 🎓 Model Card – Multiclass Classification of Cloud Types
 
 *Professor:* *[Ivanovitch Medieros Dantas da Silva](https://github.com/ivanovitchm)* 
 
