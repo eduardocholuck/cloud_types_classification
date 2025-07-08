@@ -43,7 +43,7 @@ Figure 2 shows a randomly chosen sample from each class, selected from the train
 
 ![Figure2](images/selected_sample.png)
 
-Afther this process, the final dataset had a total of 656 images for train and 165 for validation.
+After this process, the final dataset had a total of 656 images for train and 165 for validation.
 
 ## Model 0: Base Model
 
@@ -83,7 +83,7 @@ The CNN2 model is a simple convolutional neural network tailored for image class
 
 * **Number of parameters**: 6976
 
-During training, loss values were monitored across epochs for traing and validation (Figure 3), as you can see below. Furthermore, a confusion matrix was computed to evaluate model performance.
+During training, loss values were monitored across epochs for training and validation (Figure 3), as you can see below. Furthermore, a confusion matrix was computed to evaluate model performance.
 
 
 ![figure3](images/cnn2_losses.png)
@@ -97,16 +97,16 @@ To assess the results, a confusion matrix was computed using the validation data
 
 ![Figure4](images/C_matrix.png)
 
-The CCN reached an accuracy of 57%. Even Though this low accuracy, the result is better than others examples of cloud classification that can be found in the Kaggle platform using the originals datasets.
+The CCN reached an accuracy of 57%. Even though this low accuracy, the result is better than others examples of cloud classification that can be found in the Kaggle platform using the originals datasets.
 
 
 #### Trainig without Dropout
 
-The training after removing the Dropout layer had a slight increase in the accuracy, reaching 61% with the validation set. As espected, the loss in training and validation were less than the previously trainig. 
+The training after removing the Dropout layer had a slight increase in the accuracy, reaching 61% with the validation set. As expected, the loss in training and validation were less than the previously one. 
 
 ![Figure5](images/regularizing_effect.png)
 
-Besides, as we can see in the confusion matrix (Figure 6) the second training showed betters results in the classes Altocumus and Cirrus, with the last one had a incrise of 8 to 17 right predictions.
+Besides, as we can see in the confusion matrix (Figure 6) the second training showed betters results in the classes Altocumus and Cirrus, with the last one had a increase of 8 to 17 right predictions.
 
 ![Figure6](images/C_matrix_nodrop.png)
 
