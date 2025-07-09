@@ -119,11 +119,11 @@ Besides, as we can see in the confusion matrix (Figure 6) the second training sh
 
 The ```conv1``` filter visualization (Figure 7) shows 3-channel (RGB) 3×3 kernels that learn low-level features such as edges and color gradients. These weights exhibit clear directional patterns and contrasts typical of early-layer feature detectors.
 
-<!--![Figure7](images/base_model/filters_conv1.png)-->
+<![Figure7](images/base_model/filters_conv1.png)-->
 
 In contrast, the ```conv2``` visualization (Figure 8) displays 5-channel 3×3 kernels, with each channel corresponding to a feature map output from ```conv1```. These filters capture more abstract, higher-order combinations of the first-layer features. The weights appear less interpretable in isolation, reflecting their role in integrating and recombining simpler patterns into more complex representations useful for classification.
 
-<!--![Figure8](images/base_model/filters_conv2.png)-->
+![Figure8](images/base_model/filters_conv2.png)-->
 
 This progression illustrates the hierarchical nature of CNNs: ```conv1``` learns localized, low-level features, while ```conv2``` composes them into richer, more discriminative abstractions.
 
