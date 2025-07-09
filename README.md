@@ -1,4 +1,4 @@
-# 🎓 Model Card – Multiiclass Classification of Cloud Types
+# 🎓 Model Card – Multiclass Classification of Cloud Types
 
 *Professor:* *[Ivanovitch Medieros Dantas da Silva](https://github.com/ivanovitchm)* 
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-This project was developed as Part 1 of the final assessment for the course ***PPGEEC2318 - Machine Learning***. The primary objective of this initial phase was to design four versions to a convolutional neural network for the classification of cloud types based on ground-level imagery. Before proceeding, a brief explanation of clouds and their classifications is provided.
+This project was developed as Part 1 of the final assessment for the course ***PPGEEC2318 - Machine Learning***. The primary objective of this initial phase was to design four versions to a convolutional neural network (CNN) for the classification of cloud types based on ground-level imagery. Before proceeding, a brief explanation of clouds and their classifications is provided.
 
 ### Clouds and Their Classifications
 
@@ -28,7 +28,7 @@ Source: WMO (1956).
 
 Along with their altitude, clouds are also classified based on their shape, which can be seen in Figure 1.
 
-![alt text](images/base_model/cloud_types.png)
+<img src="images/base_model/cloud_types.png" width="70%">
 Source: [UCAR CENTER FOR SCIENCE EDUCATION](https://scied.ucar.edu/learning-zone/clouds/cloud-types)
 
 As can be seen in Figure 1, only two types of clouds can produce precipitation: cumulonimbus and nimbostratus. Cumulonimbus clouds are characterized by their tall, vertical shape and are associated with thunderstorms, while nimbostratus clouds are characterized by their flat, horizontal shape and are associated with persistent, widespread precipitation.
@@ -41,9 +41,10 @@ The two original datasets showed several inconsistencies regarding the previousl
 
 Figure 2 shows a randomly chosen sample from each class, selected from the training data.
 
-![Figure2](images/base_model/selected_sample.png)
+<img src="images/base_model/selected_sample.png" width="70%">
 
-After this process, the final dataset had a total of 656 images for train and 165 for validation.
+
+After this process, the final dataset had a total of 657 images for train and 165 for validation.
 
 ## Model 0: Base Model
 
@@ -59,7 +60,7 @@ After this process, the final dataset had a total of 656 images for train and 16
 
 ### Model Description
 
-The CNN2 model is a simple convolutional neural network tailored for image classification tasks with 6 output classes. Its architecture includes:
+The CNN model is a convolutional neural network tailored for image classification tasks with 6 output classes. Its architecture includes:
 
 * **Input**: RGB images (3 channels)
 
@@ -86,8 +87,8 @@ The CNN2 model is a simple convolutional neural network tailored for image class
 During training, loss values were monitored across epochs for training and validation (Figure 3), as you can see below. Furthermore, a confusion matrix was computed to evaluate model performance.
 
 
-![figure3](images/base_model/cnn2_losses.png)
-
+<!--![figure3](images/base_model/cnn2_losses.png)-->
+<img src="images/base_model/cnn2_losses.png" width="60%">
 
 ### Results
 
@@ -95,30 +96,34 @@ During training, loss values were monitored across epochs for training and valid
 
 To assess the results, a confusion matrix was computed using the validation dataset (Figure 4). The Clear Sky class achieved the highest accuracy, which is unsurprising given that it consists of images with a uniform pattern, making it easier for the model to recognize. In contrast, the Altocumulus, Cirrus, and Cumulonimbus classes showed the lowest performance. Notably, for Cirrus and Cumulonimbus, around 50% of the samples were incorrectly classified as Cumulus, highlighting the model's difficulty in distinguishing between these similar cloud types.
 
-![Figure4](images/base_model/C_matrix.png)
+<!--![Figure4](images/base_model/C_matrix.png)-->
+<img src="images/base_model/C_matrix.png" width="500">
 
-The CCN reached an accuracy of 57%. Even hough this low accuracy, the result is better than others examples of cloud classification that can be found in the Kaggle platform using the originals datasets.
+The CCN reached an accuracy of 57%. Even though this low accuracy, the result is better than others examples of cloud classification that can be found in the Kaggle platform using the originals datasets.
 
 
 #### Trainig without Dropout
 
-The training after removing the Dropout layer had a slight increase in the accuracy, reaching 61% with the validation set. As expected, the loss in training and validation were less than the previously trainig. 
+The training after removing the Dropout layer had a slight increase in the accuracy, reaching 61% with the validation set. As expected, the loss in training and validation were less than the previously one. 
 
-![Figure5](images/base_model/regularizing_effect.png)
+<!--![Figure5](images/base_model/regularizing_effect.png)-->
+<img src="images/base_model/regularizing_effect.png" width="500">
 
 Besides, as we can see in the confusion matrix (Figure 6) the second training showed betters results in the classes Altocumus and Cirrus, with the last one had a incrise of 8 to 17 right predictions.
 
-![Figure6](images/base_model/C_matrix_nodrop.png)
+<!--![Figure6](images/base_model/C_matrix_nodrop.png)-->
+
+<img src="images/base_model/C_matrix_nodrop.png" width="500">
 
 #### Visualizing Filters
 
 The ```conv1``` filter visualization (Figure 7) shows 3-channel (RGB) 3×3 kernels that learn low-level features such as edges and color gradients. These weights exhibit clear directional patterns and contrasts typical of early-layer feature detectors.
 
-![Figure7](images/base_model/filters_conv1.png)
+<!--![Figure7](images/base_model/filters_conv1.png)-->
 
 In contrast, the ```conv2``` visualization (Figure 8) displays 5-channel 3×3 kernels, with each channel corresponding to a feature map output from ```conv1```. These filters capture more abstract, higher-order combinations of the first-layer features. The weights appear less interpretable in isolation, reflecting their role in integrating and recombining simpler patterns into more complex representations useful for classification.
 
-![Figure8](images/base_model/filters_conv2.png)
+<!--![Figure8](images/base_model/filters_conv2.png)-->
 
 This progression illustrates the hierarchical nature of CNNs: ```conv1``` learns localized, low-level features, while ```conv2``` composes them into richer, more discriminative abstractions.
 
