@@ -29,6 +29,7 @@ Source: WMO (1956).
 Along with their altitude, clouds are also classified based on their shape, which can be seen in Figure 1.
 
 <img src="images/base_model/cloud_types.png" width="70%">
+
 Source: [UCAR CENTER FOR SCIENCE EDUCATION](https://scied.ucar.edu/learning-zone/clouds/cloud-types)
 
 As can be seen in Figure 1, only two types of clouds can produce precipitation: cumulonimbus and nimbostratus. Cumulonimbus clouds are characterized by their tall, vertical shape and are associated with thunderstorms, while nimbostratus clouds are characterized by their flat, horizontal shape and are associated with persistent, widespread precipitation.
@@ -119,11 +120,13 @@ Besides, as we can see in the confusion matrix (Figure 6) the second training sh
 
 The ```conv1``` filter visualization (Figure 7) shows 3-channel (RGB) 3×3 kernels that learn low-level features such as edges and color gradients. These weights exhibit clear directional patterns and contrasts typical of early-layer feature detectors.
 
-<![Figure7](images/base_model/filters_conv1.png)-->
+<!--[Figure7](images/base_model/filters_conv1.png)-->
+<img src="images/base_model/filters_conv1.png" width="70%">
 
 In contrast, the ```conv2``` visualization (Figure 8) displays 5-channel 3×3 kernels, with each channel corresponding to a feature map output from ```conv1```. These filters capture more abstract, higher-order combinations of the first-layer features. The weights appear less interpretable in isolation, reflecting their role in integrating and recombining simpler patterns into more complex representations useful for classification.
 
-![Figure8](images/base_model/filters_conv2.png)-->
+<!--![Figure8](images/base_model/filters_conv2.png)-->
+<img src="images/base_model/filters_conv1.png" width="70%">
 
 This progression illustrates the hierarchical nature of CNNs: ```conv1``` learns localized, low-level features, while ```conv2``` composes them into richer, more discriminative abstractions.
 
