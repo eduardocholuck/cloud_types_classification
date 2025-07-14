@@ -98,7 +98,7 @@ During training, loss values were monitored across epochs for training and valid
 To assess the results, a confusion matrix was computed using the validation dataset (Figure 4). The Clear Sky class achieved the highest accuracy, which is unsurprising given that it consists of images with a uniform pattern, making it easier for the model to recognize. In contrast, the Altocumulus, Cirrus, and Cumulonimbus classes showed the lowest performance. Notably, for Cirrus and Cumulonimbus, around 50% of the samples were incorrectly classified as Cumulus, highlighting the model's difficulty in distinguishing between these similar cloud types.
 
 <!--![Figure4](images/base_model/C_matrix.png)-->
-<img src="images/base_model/C_matrix.png" width="500">
+<img src="images/base_model/C_matrix.png" width="250"> <img src="images/base_model/C_matrix_nodrop.png" width="250">
 
 The CCN reached an accuracy of 57%. Even though this low accuracy, the result is better than others examples of cloud classification that can be found in the Kaggle platform using the originals datasets.
 
@@ -114,7 +114,7 @@ Besides, as we can see in the confusion matrix (Figure 6) the second training sh
 
 <!--![Figure6](images/base_model/C_matrix_nodrop.png)-->
 
-<img src="images/base_model/C_matrix_nodrop.png" width="500">
+
 
 #### Visualizing Filters
 
