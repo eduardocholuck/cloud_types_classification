@@ -50,9 +50,9 @@ After this process, the final dataset had a total of 657 images for train and 16
 
 ## Model description
 
-We've tested 4 versions of a Convolutional Neural Network (CNN) for image classification tasks with 6 output classes.
+We've tested 4 versions of a CNN for image classification tasks with 6 output classes.
 
-Algumas características são as mesmas para as 4 versões:
+Some characteristics are shared across all four versions:
 
 * **Input**: RGB images (3 channels)
 
