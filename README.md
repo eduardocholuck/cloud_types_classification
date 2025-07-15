@@ -28,7 +28,7 @@ Source: WMO (1956).
 
 Along with their altitude, clouds are also classified based on their shape, which can be seen in Figure 1.
 
-<img src="images/base_model/cloud_types.png" width="70%">
+<img src="images/base_model/cloud_types.png" width="50%">
 
 Source: [UCAR CENTER FOR SCIENCE EDUCATION](https://scied.ucar.edu/learning-zone/clouds/cloud-types)
 
@@ -42,30 +42,19 @@ The two original datasets showed several inconsistencies regarding the previousl
 
 Figure 2 shows a randomly chosen sample from each class, selected from the training data.
 
-<img src="images/base_model/selected_sample.png" width="70%">
+<img src="images/base_model/selected_sample.png" width="50%">
 
 
 After this process, the final dataset had a total of 657 images for train and 165 for validation.
 
-## Model 0: Base Model
 
-### Technologies Used
+## Model description
 
-- Python
-- PyTorch
-- Scikit-learn
-- Pandas
-- NumPy
-- Matplotlib
+We've tested 4 versions of a Convolutional Neural Network (CNN) for image classification tasks with 6 output classes.
 
-
-### Model Description
-
-The CNN model is a convolutional neural network tailored for image classification tasks with 6 output classes. Its architecture includes:
+Algumas características são as mesmas para as 4 versões:
 
 * **Input**: RGB images (3 channels)
-
-* **Convolutional Layers**: Two convolutional layers, each followed by ```ReLU``` activation and 2×2 ```Max Pooling``` to extract features and reduce dimensionality
 
 * **Dropout**: Optional dropout layers can be applied for regularization
 
@@ -73,64 +62,72 @@ The CNN model is a convolutional neural network tailored for image classificatio
 
 * **Forward Pass**: Data flows sequentially through the featurizer (convolutions and pooling) and the classifier (fully connected layers)
 
-* **Loss Function**: Cross-Entropy Loss (```nn.CrossEntropyLoss```), suitable for multi-class classification
-
-* **Optimizer**: Adam optimizer (```torch.optim.Adam```), applied to all model parameters
+* **Loss Function**: Cross-Entropy Loss (```nn.CrossEntropyLoss```)
 
 * **Batch Size**: 16
 
-* **Epochs**: 10
+Table 2 presents the main differences between the proposed models.
 
-* **Validation Strategy**: A validation split was used to monitor model performance during training
+```
+Table 2 - Description of the differences in model configurations
 
-* **Number of parameters**: 6976
+| Model Name               | Optimizer | Featues | Conv. Layers | Activation Func.| Parameters | Ephocs |
+|--------------------------|-----------|---------|--------------|-----------------|------------|--------|
+| Base Model (BM)          |    Adam   |    5    |      2       |       ReLU      |    6.976   |   10   |
+| BM + n_feature changes   |    Adam   |   15    |      2       |       ReLU      |   21.566   |   10   |
+| BM + conv blocks changes |    Adam   |    5    |      4       |       ReLU      |    7.436   |   10   |
+| Personal Model           |    AdamW  |    5    |      2       |        ELU      |    6.976   |   154  |
+```
 
-During training, loss values were monitored across epochs for training and validation (Figure 3), as you can see below. Furthermore, a confusion matrix was computed to evaluate model performance.
+## Results
 
+To avoid a long README file, we will highlight the mainly results. For more details, please acess the notebooks of each experiment in the folder [notebooks](notebooks/).
 
-<!--![figure3](images/base_model/cnn2_losses.png)-->
-<img src="images/base_model/cnn2_losses.png" width="60%">
+### Confusion Matrix
 
-### Results
+Across all four CNN configurations tested, the confusion matrices (Figures 03 to 06) revealed that overall classification performance was strongly influenced by architectural choices such as the number of convolutional layers, the number of feature maps, and the activation function. 
 
-#### Regular training
+The BM (Figure 03) and BM + n_feature increse (Figure 04) changes generally maintained solid diagonal patterns, showing robust performance despite an increase in parameters when using 15 features.
 
-To assess the results, a confusion matrix was computed using the validation dataset (Figure 4). The Clear Sky class achieved the highest accuracy, which is unsurprising given that it consists of images with a uniform pattern, making it easier for the model to recognize. In contrast, the Altocumulus, Cirrus, and Cumulonimbus classes showed the lowest performance. Notably, for Cirrus and Cumulonimbus, around 50% of the samples were incorrectly classified as Cumulus, highlighting the model's difficulty in distinguishing between these similar cloud types.
+Figure 03 - Base Model and Base Model with no Dropout
 
-<!--![Figure4](images/base_model/C_matrix.png)-->
-<img src="images/base_model/C_matrix.png" width="250"> <img src="images/base_model/C_matrix_nodrop.png" width="250">
+<img src="images/base_model/C_matrix.png" width="300"> <img src="images/base_model/C_matrix_nodrop.png" width="306">
 
-The CCN reached an accuracy of 57%. Even though this low accuracy, the result is better than others examples of cloud classification that can be found in the Kaggle platform using the originals datasets.
+Figure 04 - BM + n_feature increse  and BM + n_feature increse with no Dropout
 
+<img src="images/model_1/C_matrix.png" width="300"> <img src="images/model_1/C_matrix_nodrop.png" width="300">
 
-#### Trainig without Dropout
+However, BM + conv blocks changes (Figure 05), with its deeper 4-layer convolutional stack, exhibited clear signs of degradation when dropout was applied—its confusion matrices showed lighter diagonals and more off-diagonal errors, suggesting that excessive regularization in this deeper design led to underfitting.
 
-The training after removing the Dropout layer had a slight increase in the accuracy, reaching 61% with the validation set. As expected, the loss in training and validation were less than the previously one. 
+Figure 05 - BM + conv blocks changes  and BM + conv blocks changes with no Dropout
 
-<!--![Figure5](images/base_model/regularizing_effect.png)-->
-<img src="images/base_model/regularizing_effect.png" width="500">
+<img src="images/model_2/C_matrix.png" width="300"> <img src="images/model_2/C_matrix_nodrop.png" width="300">
 
-Besides, as we can see in the confusion matrix (Figure 6) the second training showed betters results in the classes Altocumus and Cirrus, with the last one had a incrise of 8 to 17 right predictions.
+In contrast, the Personal Model (Figure 06), which combined the AdamW optimizer with ELU activations, consistently delivered the strongest results across all classes, with highly concentrated diagonal entries even with dropout. This suggests that the choice of optimizer and activation function played a key role in improving generalization without sacrificing accuracy.
 
-<!--![Figure6](images/base_model/C_matrix_nodrop.png)-->
+Figure 06 - Personal Model
 
+<img src="images/personal_model/C_matrix_v3.png" width="300"> <img src="images/personal_model/C_matrix_nodrop_v3.png" width="300">
 
+Notably, dropout generally helped reduce minor misclassifications in simpler models but was detrimental in the deeper variant, underscoring that regularization needs to be carefully balanced with model capacity. These findings highlight that even subtle changes in optimizer, nonlinearity, and network depth can have meaningful impacts on CNN performance for multi-class image classification.
 
-#### Visualizing Filters
+### Accuracy
 
-The ```conv1``` filter visualization (Figure 7) shows 3-channel (RGB) 3×3 kernels that learn low-level features such as edges and color gradients. These weights exhibit clear directional patterns and contrasts typical of early-layer feature detectors.
-
-<!--[Figure7](images/base_model/filters_conv1.png)-->
-<img src="images/base_model/filters_conv1.png" width="70%">
-
-In contrast, the ```conv2``` visualization (Figure 8) displays 5-channel 3×3 kernels, with each channel corresponding to a feature map output from ```conv1```. These filters capture more abstract, higher-order combinations of the first-layer features. The weights appear less interpretable in isolation, reflecting their role in integrating and recombining simpler patterns into more complex representations useful for classification.
-
-<!--![Figure8](images/base_model/filters_conv2.png)-->
-<img src="images/base_model/filters_conv1.png" width="70%">
-
-This progression illustrates the hierarchical nature of CNNs: ```conv1``` learns localized, low-level features, while ```conv2``` composes them into richer, more discriminative abstractions.
+The accuracy results reinforce the trends observed in the confusion matrices (Table 3). The Personal Model achieved the highest accuracy (72%), showing the benefit of combining the AdamW optimizer and ELU activation in improving generalization and class separation. Model 1 slightly outperformed the Base Model (60% vs 57%), suggesting that increasing the number of features can modestly improve representational power. By contrast, Model 2 had the lowest accuracy (32%), indicating that simply deepening the network without careful tuning of regularization and capacity led to underfitting or unstable learning. Overall, these results highlight the importance of architectural and optimization choices in achieving robust performance in multi-class image classification tasks.
 
 
-## Model 1: Base Model + n_feature modification
+```
+## Table 3 - Accuracy Results for the Tested Models
 
-### Modifications in the CNN 
+|  Model Name    |   Acc  |  Acc - No Dropout  |
+|----------------|--------|--------------------|
+| Base Model     |  0.57  |        0.61        |
+| Model 1        |  0.60  |        0.65        |
+| Model 2        |  0.32  |        0.56        |
+| Personal Model |  0.75  |        0.??        |
+```
+
+### Hooks and Filters
+
+We chose to analyze Model 2 and the Personal Model because they represent the extremes in performance: Model 2 had the lowest accuracy and showed clear signs of underfitting or poor feature learning, while the Personal Model achieved the highest accuracy. By comparing their filters and hooks, we can better understand what differentiates well-learned representations from poor ones and gain insights into how architectural choices and regularization affect feature extraction.
+
