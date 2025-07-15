@@ -32,7 +32,7 @@ Source: WMO (1956).
 
 Along with their altitude, clouds are also classified based on their shape, which can be seen in Figure 1.
 
-<img src="images/base_model/cloud_types.png" width="75%">
+<img src="images/base_model/cloud_types.png" width="65%">
 
 Source: [UCAR CENTER FOR SCIENCE EDUCATION](https://scied.ucar.edu/learning-zone/clouds/cloud-types)
 
@@ -46,7 +46,7 @@ The two original datasets showed several inconsistencies regarding the previousl
 
 Figure 2 shows a randomly chosen sample from each class, selected from the training data.
 
-<img src="images/base_model/selected_sample.png" width="100%">
+<img src="images/base_model/selected_sample.png" width="85%">
 
 
 After this process, the final dataset had a total of 657 images for train and 165 for validation.
@@ -70,17 +70,19 @@ Some characteristics are shared across all four versions:
 
 * **Batch Size**: 16
 
+* **Learning Rate**: 3e<sup>-4</sup>
+
 Table 2 presents the main differences between the proposed models.
 
 ```
 Table 2 - Description of the differences in model configurations
 
-| Model Name       | Optimizer | Featues | Conv. Layers | Activation Func.| Parameters | Ephocs |Input Size|
-|------------------|-----------|---------|--------------|-----------------|------------|--------|----------|
-| Base Model (BM)  |    Adam   |    5    |      2       |       ReLU      |    6.976   |   10   |  28x28   |
-| BM + n_feature   |    Adam   |   15    |      2       |       ReLU      |   21.566   |   10   |  28x28   |
-| BM + conv blocks |    Adam   |    5    |      4       |       ReLU      |    7.436   |   10   |  28x28   | 
-| Personal Model   |    AdamW  |    5    |      2       |       ELU       |    6.976   |   154  | 128x128  |
+| Model Name       | Optimizer | Featues | Conv. Layers | Activation Func.| Ephocs |Input Size|
+|------------------|-----------|---------|--------------|-----------------|--------|----------|
+| Base Model (BM)  |    Adam   |    5    |      2       |       ReLU      |   10   |  28x28   |
+| BM + n_feature   |    Adam   |   15    |      2       |       ReLU      |   10   |  28x28   |
+| BM + conv blocks |    Adam   |    5    |      4       |       ReLU      |   10   |  28x28   | 
+| Personal Model   |    AdamW  |    5    |      2       |       ELU       |   154  | 128x128  |
 ```
 
 ## Results
@@ -140,6 +142,7 @@ Figure 07 - Feature Activations Across Layers - Personal Model
 <img src="images/personal_model/visualize_outputs_v3.png" width="500">
 
 
+
 In contrast, Model 2, with its deeper four-layer architecture, exhibits increasingly blurred and diffuse activations in the later layers, suggesting over-compression and loss of discriminative information. This difference directly aligns with their classification performance, where the Personal Model achieves significantly higher accuracy by maintaining better hierarchical feature representations.
 
 Figure 08 - Feature Activations Across Layers - Model 2
@@ -151,5 +154,28 @@ Figure 08 - Feature Activations Across Layers - Model 2
 
 The experiments demonstrate that even small architectural choices and hyperparameter adjustments can have a substantial impact on multiclass cloud classification performance. Models with deeper convolutional stacks require careful tuning of regularization to avoid underfitting or information loss, as seen in Model 2's reduced accuracy and blurred activation maps. In contrast, the Personal Model, combining the AdamW optimizer and ELU activation, achieved the highest accuracy by preserving clear, interpretable features across layers and demonstrating strong generalization. These results highlight the importance of balancing model capacity, activation functions, and optimizers to build effective CNNs for challenging visual classification tasks.
 
-#
+## Extra comments
+
+### Limitations
+
+- The dataset is relatively small, which may limit generalization to new cloud images.
+- Class imbalance was only partially addressed through manual selection.
+- The models were trained on low-resolution inputs (e.g., 28x28 or 128x128), potentially missing finer textural details.
+- No systematic hyperparameter tuning (e.g., grid search) was conducted.
+
+### Future Work
+
+- Increase dataset size with more labeled images.
+- Apply data augmentation systematically.
+- Explore advanced architectures like ResNet or EfficientNet.
+- Use automated hyperparameter search to optimize learning rate, dropout, and filter count.
+- Evaluate model robustness under varying lighting conditions.
+
+## References
+
+- [Howard-Cloud-X Dataset](https://www.kaggle.com/datasets/imbikramsaha/howard-cloudx) (Kaggle).
+- PyTorch Documentation: https://pytorch.org
+- Thitinan Kliangsuwan. [Cloud Type Classification 3](https://kaggle.com/competitions/cloud-type-classification-3) (Kaggle, 2022).
+- UCAR Center for Science Education. [Cloud Types](https://scied.ucar.edu/learning-zone/clouds/cloud-types)
+- World Meteorological Organization. International Cloud Atlas, 1956.
 
