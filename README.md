@@ -11,7 +11,10 @@ This project was developed as Part 1 of the final assessment for the course ***P
 ### Clouds and Their Classifications
 
 Clouds are visible collections of water droplets, ice particles, or a combination of both, suspended in the atmosphere. They often also contain particles such as dust, smoke, and industrial residues. Clouds are continuously evolving, frequently changing their shape, size, and appearance, which are mainly determined by two properties: 
-* Luminancethe, the amount of light reflected, transmitted, or scattered by cloud particles;
+
+* Luminance—the amount of light reflected, transmitted, or scattered by cloud particles;
+
+* Color, influenced by incident light from natural or artificial sources (city lights).
 
 * Color, influenced by incident light from natural or artificial sources (city lights).
 
@@ -31,7 +34,7 @@ Source: WMO (1956).
 
 Along with their altitude, clouds are also classified based on their shape, which can be seen in Figure 1.
 
-<img src="images/base_model/cloud_types.png" width="75%">
+<img src="images/base_model/cloud_types.png" width="65%">
 
 Source: [UCAR CENTER FOR SCIENCE EDUCATION](https://scied.ucar.edu/learning-zone/clouds/cloud-types)
 
@@ -45,7 +48,7 @@ The two original datasets showed several inconsistencies regarding the previousl
 
 Figure 2 shows a randomly chosen sample from each class, selected from the training data.
 
-<img src="images/base_model/selected_sample.png" width="75%">
+<img src="images/base_model/selected_sample.png" width="85%">
 
 
 After this process, the final dataset had a total of 657 images for train and 165 for validation.
@@ -69,17 +72,19 @@ Some characteristics are shared across all four versions:
 
 * **Batch Size**: 16
 
+* **Learning Rate**: 3e<sup>-4</sup>
+
 Table 2 presents the main differences between the proposed models.
 
 ```
 Table 2 - Description of the differences in model configurations
 
-| Model Name       | Optimizer | Featues | Conv. Layers | Activation Func.| Parameters | Ephocs |Input Size|
-|------------------|-----------|---------|--------------|-----------------|------------|--------|----------|
-| Base Model (BM)  |    Adam   |    5    |      2       |       ReLU      |    6.976   |    10  |  28x28   |
-| BM + n_feature   |    Adam   |   15    |      2       |       ReLU      |   21.566   |    10  |  28x28   |
-| BM + conv blocks |    Adam   |    5    |      4       |       ReLU      |    7.436   |    10  |  28x28   |
-| Personal Model   |    AdamW  |    5    |      2       |        ELU      |    6.976   |   154  | 128x128  |
+| Model Name       | Optimizer | Featues | Conv. Layers | Activation Func.| Ephocs |Input Size|
+|------------------|-----------|---------|--------------|-----------------|--------|----------|
+| Base Model (BM)  |    Adam   |    5    |      2       |       ReLU      |   10   |  28x28   |
+| BM + n_feature   |    Adam   |   15    |      2       |       ReLU      |   10   |  28x28   |
+| BM + conv blocks |    Adam   |    5    |      4       |       ReLU      |   10   |  28x28   | 
+| Personal Model   |    AdamW  |    5    |      2       |       ELU       |   154  | 128x128  |
 ```
 
 ## Results
@@ -92,7 +97,7 @@ Across all four CNN configurations tested, the confusion matrices (Figures 03 to
 
 The BM (Figure 03) and BM + n_feature increse (Figure 04) changes generally maintained solid diagonal patterns, showing robust performance despite an increase in parameters when using 15 features.
 
-Figure 03 - Base Model and Base Model with no Dropout
+Figure 03 - Base Model and Base Model with no Dropout (ND)
 
 <img src="images/base_model/C_matrix.png" width="300"> <img src="images/base_model/C_matrix_nodrop.png" width="306">
 
@@ -122,12 +127,12 @@ The accuracy results reinforce the trends observed in the confusion matrices (Ta
 ```
 ## Table 3 - Accuracy Results for the Tested Models
 
-|  Model Name    |   Acc  |  Acc - No Dropout  |
-|----------------|--------|--------------------|
-| Base Model     |  0.57  |        0.61        |
-| Model 1        |  0.60  |        0.65        |
-| Model 2        |  0.32  |        0.56        |
-| Personal Model |  0.75  |        0.80        |
+|  Model Name    |   Acc  | Acc - ND  |
+|----------------|--------|-----------|
+| Base Model     |  0.57  |   0.61    |
+| Model 1        |  0.60  |   0.65    |
+| Model 2        |  0.32  |   0.56    |
+| Personal Model |  0.75  |   0.80    |
 ```
 
 ### Hooks and Filters
@@ -137,6 +142,7 @@ We chose to analyze ```Model 2``` and the ```Personal Model``` because they repr
 Figure 07 - Feature Activations Across Layers - Personal Model
 
 <img src="images/personal_model/visualize_outputs_v3.png" width="500">
+
 
 
 In contrast, Model 2, with its deeper four-layer architecture, exhibits increasingly blurred and diffuse activations in the later layers, suggesting over-compression and loss of discriminative information. This difference directly aligns with their classification performance, where the Personal Model achieves significantly higher accuracy by maintaining better hierarchical feature representations.
@@ -149,3 +155,29 @@ Figure 08 - Feature Activations Across Layers - Model 2
 ## Conclusion
 
 The experiments demonstrate that even small architectural choices and hyperparameter adjustments can have a substantial impact on multiclass cloud classification performance. Models with deeper convolutional stacks require careful tuning of regularization to avoid underfitting or information loss, as seen in Model 2's reduced accuracy and blurred activation maps. In contrast, the Personal Model, combining the AdamW optimizer and ELU activation, achieved the highest accuracy by preserving clear, interpretable features across layers and demonstrating strong generalization. These results highlight the importance of balancing model capacity, activation functions, and optimizers to build effective CNNs for challenging visual classification tasks.
+
+## Extra comments
+
+### Limitations
+
+- The dataset is relatively small, which may limit generalization to new cloud images.
+- Class imbalance was only partially addressed through manual selection.
+- The models were trained on low-resolution inputs (e.g., 28x28 or 128x128), potentially missing finer textural details.
+- No systematic hyperparameter tuning (e.g., grid search) was conducted.
+
+### Future Work
+
+- Increase dataset size with more labeled images.
+- Apply data augmentation systematically.
+- Explore advanced architectures like ResNet or EfficientNet.
+- Use automated hyperparameter search to optimize learning rate, dropout, and filter count.
+- Evaluate model robustness under varying lighting conditions.
+
+## References
+
+- [Howard-Cloud-X Dataset](https://www.kaggle.com/datasets/imbikramsaha/howard-cloudx) (Kaggle).
+- PyTorch Documentation: https://pytorch.org
+- Thitinan Kliangsuwan. [Cloud Type Classification 3](https://kaggle.com/competitions/cloud-type-classification-3) (Kaggle, 2022).
+- UCAR Center for Science Education. [Cloud Types](https://scied.ucar.edu/learning-zone/clouds/cloud-types)
+- World Meteorological Organization. International Cloud Atlas, 1956.
+
