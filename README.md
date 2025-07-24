@@ -6,7 +6,7 @@
 
 ## Overview
 
-This project was developed as Part 1 of the final assessment for the course ***PPGEEC2318 - Machine Learning***. The primary objective of this initial phase was to design four versions to a convolutional neural network (CNN) for the classification of cloud types based on ground-level imagery. Before proceeding, a brief explanation of clouds and their classifications is provided.
+This project was developed as the final assessment for the course ***PPGEEC2318 - Machine Learning***. The primary objective of this initial phase was to design five versions to a convolutional neural network (CNN) for the classification of cloud types based on ground-level imagery. Before proceeding, a brief explanation of clouds and their classifications is provided.
 
 ### Clouds and Their Classifications
 
@@ -56,13 +56,13 @@ After this process, the final dataset had a total of 657 images for train and 16
 
 ## Model description
 
-We've tested 4 versions of a CNN for image classification tasks with 6 output classes.
+We've tested 5 versions of a CNN for image classification tasks with 6 output classes.
 
 Some characteristics are shared across all four versions:
 
 * **Input**: RGB images (3 channels)
 
-* **Dropout**: Optional dropout layers can be applied for regularization
+* **Dropout**: Optional dropout layers can be applied for regularization (30%)
 
 * **Fully Connected Layers**: One hidden (50 units) and one output layer (6 units for class scores)
 
@@ -73,6 +73,8 @@ Some characteristics are shared across all four versions:
 * **Batch Size**: 16
 
 * **Learning Rate**: 3e<sup>-4</sup>
+    
+    * The Personal Model 2 had different Learning Rate (LR), becouse we apply a function to find the best LR for the model. 
 
 Table 2 presents the main differences between the proposed models.
 
@@ -85,6 +87,7 @@ Table 2 - Description of the differences in model configurations
 | BM + n_feature   |    Adam   |   15    |      2       |       ReLU      |   10   |  28x28   |
 | BM + conv blocks |    Adam   |    5    |      4       |       ReLU      |   10   |  28x28   | 
 | Personal Model   |    AdamW  |    5    |      2       |       ELU       |   154  | 128x128  |
+| Personal Model 2 |    AdamW  |    5    |      2       |       ELU       |   56   | 128x128  |
 ```
 
 ## Results
