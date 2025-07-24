@@ -86,7 +86,7 @@ Table 2 - Description of the differences in model configurations
 | Base Model (BM)  |    Adam   |    5    |      2       |       ReLU      |   10   |  28x28   |
 | BM + n_feature   |    Adam   |   15    |      2       |       ReLU      |   10   |  28x28   |
 | BM + conv blocks |    Adam   |    5    |      4       |       ReLU      |   10   |  28x28   | 
-| Personal Model   |    AdamW  |    5    |      2       |       ELU       |   154  | 128x128  |
+| Personal Model 1 |    AdamW  |    5    |      2       |       ELU       |   154  | 128x128  |
 | Personal Model 2 |    AdamW  |    5    |      2       |       ELU       |   56   | 128x128  |
 ```
 
@@ -96,9 +96,9 @@ To avoid a long README file, we will highlight the mainly results. For more deta
 
 ### Confusion Matrix
 
-Across all four CNN configurations tested, the confusion matrices (Figures 03 to 06) revealed that overall classification performance was strongly influenced by architectural choices such as the number of convolutional layers, the number of feature maps, and the activation function. 
+Across all five CNN configurations tested, the confusion matrices (Figures 03 to 07) revealed that overall classification performance was strongly influenced by architectural choices such as the number of convolutional layers, the number of feature maps, the activation function, and the optimizer used.
 
-The BM (Figure 03) and BM + n_feature increse (Figure 04) changes generally maintained solid diagonal patterns, showing robust performance despite an increase in parameters when using 15 features.
+The BM (Figure 03) and BM + n_feature increse (Figure 04) changes generally maintained solid diagonal patterns, showing robust performance despite an increase in parameters when using 15 features. Both models were able to classify Clear Sky and Cumulus clouds with high accuracy in all experiments, while Cirrus hadn't the best performance in the BM, but improved in the BM + n_feature increase.
 
 Figure 03 - Base Model and Base Model with no Dropout (ND)
 
@@ -108,45 +108,50 @@ Figure 04 - BM + n_feature increse  and BM + n_feature increse with no Dropout
 
 <img src="images/model_1/C_matrix.png" width="300"> <img src="images/model_1/C_matrix_nodrop.png" width="300">
 
-However, BM + conv blocks changes (Figure 05), with its deeper 4-layer convolutional stack, exhibited clear signs of degradation when dropout was applied—its confusion matrices showed lighter diagonals and more off-diagonal errors, suggesting that excessive regularization in this deeper design led to underfitting.
+However, BM + conv blocks changes (Figure 05), with its deeper 4-layer convolutional stack, exhibited clear signs of degradation when dropout was applied—its confusion matrices showed lighter diagonals and more off-diagonal errors, suggesting that excessive regularization in this deeper design led to underfitting or loss of discriminative power. The model just managed to classify Cumulus and Nimbostratus clouds, while the other classes were confused with each other. The confusion matrix without dropout shows a slight improvement, but still not enough to achieve good performance.
 
 Figure 05 - BM + conv blocks changes  and BM + conv blocks changes with no Dropout
 
 <img src="images/model_2/C_matrix.png" width="300"> <img src="images/model_2/C_matrix_nodrop.png" width="300">
 
-In contrast, the Personal Model (Figure 06), which combined the AdamW optimizer with ELU activations, consistently delivered the strongest results across all classes, with highly concentrated diagonal entries even with dropout. This suggests that the choice of optimizer and activation function played a key role in improving generalization without sacrificing accuracy.
+In contrast, the Personal Model 1 (Figure 06), which combined the AdamW optimizer with ELU activations, consistently delivered the strongest results across all classes, with highly concentrated diagonal entries even with dropout. This suggests that the choice of optimizer and activation function played a key role in improving generalization without sacrificing accuracy.
 
-Figure 06 - Personal Model
+Figure 06 - Personal Model 1 and Personal Model 1 with no Dropout
 
 <img src="images/personal_model/C_matrix_v3.png" width="300"> <img src="images/personal_model/C_matrix_nodrop_v3.png" width="300">
+
+For the Personal Model 2, we added a function to find the best learning rate, which resulted in a slightly worse performance than the Personal Model 1, but still better than the other models. The confusion matrix (Figure 07) shows that the model was able to classify all classes with good accuracy, but with some confusion between Cumulus, Cirrus and Nimbostratus.
+
+Figure 07 - Personal Model 2 and Personal Model 2 with no Dropout
+
+<img src="images/personal_model2/C_matrix_v4.png" width="300"> <img src="images/personal_model2/C_matrix_nodrop_v4.png" width="300">
 
 Notably, dropout generally helped reduce minor misclassifications in simpler models but was detrimental in the deeper variant, underscoring that regularization needs to be carefully balanced with model capacity. These findings highlight that even subtle changes in optimizer, nonlinearity, and network depth can have meaningful impacts on CNN performance for multi-class image classification.
 
 ### Accuracy
 
-The accuracy results reinforce the trends observed in the confusion matrices (Table 3). The Personal Model achieved the highest accuracy (72%), showing the benefit of combining the AdamW optimizer and ELU activation in improving generalization and class separation. Model 1 slightly outperformed the Base Model (60% vs 57%), suggesting that increasing the number of features can modestly improve representational power. By contrast, Model 2 had the lowest accuracy (32%), indicating that simply deepening the network without careful tuning of regularization and capacity led to underfitting or unstable learning. Overall, these results highlight the importance of architectural and optimization choices in achieving robust performance in multi-class image classification tasks.
+The accuracy results reinforce the trends observed in the confusion matrices (Table 3). The Personal Model 1 achieved the highest accuracy (75%), showing the benefit of combining the AdamW optimizer and ELU activation in improving generalization and class separation. The Personal Model 2 also performed well (70%), indicating that the choice of learning rate and architecture can significantly influence results, even if it was slightly less effective than the Personal Model 1. BM + n_features slightly outperformed the BM (60% vs 57%), suggesting that increasing the number of features can modestly improve representational power. By contrast, BM + conv_blocks had the lowest accuracy (32%), indicating that simply deepening the network without careful tuning of regularization and capacity led to underfitting or unstable learning. Overall, these results highlight the importance of architectural and optimization choices in achieving robust performance in multi-class image classification tasks.
 
 
 ```
 ## Table 3 - Accuracy Results for the Tested Models
 
-|  Model Name    |   Acc  | Acc - ND  |
-|----------------|--------|-----------|
-| Base Model     |  0.57  |   0.61    |
-| Model 1        |  0.60  |   0.65    |
-| Model 2        |  0.32  |   0.56    |
-| Personal Model |  0.75  |   0.80    |
+|  Model Name      |   Acc  | Acc - ND  |
+|------------------|--------|-----------|
+| Base Model       |  0.57  |   0.61    |
+| Model 1          |  0.60  |   0.65    |
+| Model 2          |  0.32  |   0.56    |
+| Personal Model 1 |  0.75  |   0.80    |
+| Personal Model 2 |  0.70  |   0.77    |
 ```
 
 ### Hooks and Filters
 
-We chose to analyze ```Model 2``` and the ```Personal Model``` because they represent the extremes in performance: ```Model 2``` had the lowest accuracy and showed clear signs of underfitting or poor feature learning, while the ```Personal Model``` achieved the highest accuracy. By comparing their filters and hooks, we can better understand what differentiates well-learned representations from poor ones and gain insights into how architectural choices and regularization affect feature extraction. In particular, by examining the activation maps from both models, we see that the ```Personal Model’s``` two-layer design preserves clearer, well-defined features at each convolutional stage, with evident textural and edge patterns (Figure 07). 
+We chose to analyze ```BM + conv_blocks``` and the ```Personal Model 1``` because they represent the extremes in performance: ```BM + conv_blocks``` had the lowest accuracy and showed clear signs of underfitting or poor feature learning, while the ```Personal Model 1``` achieved the highest accuracy. By comparing their filters and hooks, we can better understand what differentiates well-learned representations from poor ones and gain insights into how architectural choices and regularization affect feature extraction. In particular, by examining the activation maps from both models, we see that the ```Personal Model’s 1``` two-layer design preserves clearer, well-defined features at each convolutional stage, with evident textural and edge patterns (Figure 07).
 
 Figure 07 - Feature Activations Across Layers - Personal Model
 
 <img src="images/personal_model/visualize_outputs_v3.png" width="500">
-
-
 
 In contrast, Model 2, with its deeper four-layer architecture, exhibits increasingly blurred and diffuse activations in the later layers, suggesting over-compression and loss of discriminative information. This difference directly aligns with their classification performance, where the Personal Model achieves significantly higher accuracy by maintaining better hierarchical feature representations.
 
@@ -157,7 +162,7 @@ Figure 08 - Feature Activations Across Layers - Model 2
 
 ## Conclusion
 
-The experiments demonstrate that even small architectural choices and hyperparameter adjustments can have a substantial impact on multiclass cloud classification performance. Models with deeper convolutional stacks require careful tuning of regularization to avoid underfitting or information loss, as seen in Model 2's reduced accuracy and blurred activation maps. In contrast, the Personal Model, combining the AdamW optimizer and ELU activation, achieved the highest accuracy by preserving clear, interpretable features across layers and demonstrating strong generalization. These results highlight the importance of balancing model capacity, activation functions, and optimizers to build effective CNNs for challenging visual classification tasks.
+The experiments demonstrate that even small architectural choices and hyperparameter adjustments can have a substantial impact on multiclass cloud classification performance. Models with deeper convolutional stacks require careful tuning of regularization to avoid underfitting or information loss, as seen in BM + conv_blocks' reduced accuracy and blurred activation maps. In contrast, the Personal Model 1, combining the AdamW optimizer and ELU activation, achieved the highest accuracy by preserving clear, interpretable features across layers and demonstrating strong generalization. These results highlight the importance of balancing model capacity, activation functions, and optimizers to build effective CNNs for challenging visual classification tasks.
 
 ## Extra comments
 
@@ -173,7 +178,7 @@ The experiments demonstrate that even small architectural choices and hyperparam
 - Increase dataset size with more labeled images.
 - Apply data augmentation systematically.
 - Explore advanced architectures like ResNet or EfficientNet.
-- Use automated hyperparameter search to optimize learning rate, dropout, and filter count.
+- Use automated hyperparameter search to optimize dropout, and filter count.
 - Evaluate model robustness under varying lighting conditions.
 
 ## References
