@@ -1,6 +1,6 @@
 # 🎓 Model Card – Multiclass Classification of Cloud Types
 
-*Professor:* *[Ivanovitch Medieros Dantas da Silva](https://github.com/ivanovitchm)* 
+*Professor:* *[Ivanovitch Medeiros Dantas da Silva](https://github.com/ivanovitchm)* 
 
 *Student: [Luiz Eduardo Nunes Cho-Luck](https://github.com/eduardocholuck) - 20241012311*
 
